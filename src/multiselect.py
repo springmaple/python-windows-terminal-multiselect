@@ -1,3 +1,10 @@
+""" Python MultiSelect UI for Windows Terminal
+
+Simple multiselect UI for Windows Terminal in single file, without depending
+on any external package.
+
+.. author:: SpringMaple <springmaple@live.com.my>
+"""
 import msvcrt
 
 
