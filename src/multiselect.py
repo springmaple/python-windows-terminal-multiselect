@@ -13,14 +13,19 @@ class _MultiSelect:
         self.options = options
         self.current_index = 0
         self.selected_indexes = set(selected_indexes or [])
+        self.a = 0
 
     def display_options(self):
+        self.a = 0
+        print('')
         print('Controls: [UP/DOWN] move | [SPACE] de/select | [ENTER] apply | [CTRL-C/ESC] cancel')
         print('')
+        self.a += 3
         for index, option in enumerate(self.options):
             print('=>', end=' ') if self.current_index == index else print('  ', end=' ')
             print('[X]', end=' ') if index in self.selected_indexes else print('[ ]', end=' ')
             print(option)
+            self.a += 1
         print('', end='', flush=True)
 
     def move_current_index(self, step):
@@ -36,10 +41,10 @@ class _MultiSelect:
     def get_selected_indexes(self):
         return list(sorted(self.selected_indexes))
 
-    @staticmethod
-    def clear_screen():
+    def clear_screen(self):
         # https://stackoverflow.com/a/50560686/1640033
-        print("\033[H\033[J", end="")
+        # https://sites.ecse.rpi.edu//courses/CStudio/Old%20MPS%20Labs/MPS_ANSI_Lab_Ex2.pdf
+        print(f"\033[{self.a}A\033[J", end="", flush=True)
 
 
 class MultiSelectCancelled(Exception):
@@ -77,9 +82,9 @@ def multiselect(options, selected_indexes):
 
     m = _MultiSelect(options, selected_indexes)
     while True:
-        m.clear_screen()
         m.display_options()
         key = _wait_key()
+        m.clear_screen()
         if key == _keys['UP']:
             m.move_current_index(-1)
         elif key == _keys['DOWN']:
@@ -87,8 +92,6 @@ def multiselect(options, selected_indexes):
         elif key == _keys['SPACE']:
             m.toggle_current_index_selection()
         elif key == _keys['ENTER']:
-            m.clear_screen()
             return m.get_selected_indexes()
         elif key in (_keys['ESC'], _keys['CTRL-C']):
-            m.clear_screen()
             raise MultiSelectCancelled()
