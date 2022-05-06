@@ -13,19 +13,19 @@ class _MultiSelect:
         self.options = options
         self.current_index = 0
         self.selected_indexes = set(selected_indexes or [])
-        self.a = 0
+        self.newlines_count = 0
 
     def display_options(self):
-        self.a = 0
+        self.newlines_count = 0
         print('')
         print('Controls: [UP/DOWN] move | [SPACE] de/select | [ENTER] apply | [CTRL-C/ESC] cancel')
         print('')
-        self.a += 3
+        self.newlines_count += 3
         for index, option in enumerate(self.options):
             print('=>', end=' ') if self.current_index == index else print('  ', end=' ')
             print('[X]', end=' ') if index in self.selected_indexes else print('[ ]', end=' ')
             print(option)
-            self.a += 1
+            self.newlines_count += 1
         print('', end='', flush=True)
 
     def move_current_index(self, step):
@@ -44,7 +44,7 @@ class _MultiSelect:
     def clear_screen(self):
         # https://stackoverflow.com/a/50560686/1640033
         # https://sites.ecse.rpi.edu//courses/CStudio/Old%20MPS%20Labs/MPS_ANSI_Lab_Ex2.pdf
-        print(f"\033[{self.a}A\033[J", end="", flush=True)
+        print(f"\033[{self.newlines_count}A\033[J", end="", flush=True)
 
 
 class MultiSelectCancelled(Exception):
